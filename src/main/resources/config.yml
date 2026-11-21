@@ -1,0 +1,14 @@
+# IQDisplay configuration (MiniMessage format). <iq> is the colored IQ number.
+# Restart the server after editing.
+
+chat:
+  # Placeholders: <iq>, <player>, <message>
+  format: "<dark_gray>[<gray>IQ <iq><dark_gray>] <white><player><dark_gray>: <white><message>"
+
+nametag:
+  # Shown before / after the name above their head (and in the tab list). Leave "" for nothing.
+  prefix: "<dark_gray>[<iq><dark_gray>] "
+  suffix: ""
+
+# Shown for players who have no IQ (for example ops with iqtest.bypass).
+no-iq-text: "?"

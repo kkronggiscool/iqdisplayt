@@ -1,0 +1,6 @@
+name: IQDisplay
+version: 1.0.0
+main: com.example.iqdisplay.IQDisplay
+api-version: '1.21'
+depend: [IQTest]
+description: Shows each player's IQ in chat messages and above their nametag.
