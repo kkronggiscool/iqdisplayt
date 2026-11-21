@@ -9,6 +9,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -100,13 +101,20 @@ public final class IQDisplay extends JavaPlugin implements Listener {
 
     // ------------------------------------------------------------------ chat
 
-    @EventHandler
+    /**
+     * Runs last. Messages blocked by IQTest (locked players, too long, cooldown) are skipped.
+     * We cancel the normal chat message and send our own formatted one, so no other chat
+     * formatting can override the IQ and name.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncChatEvent event) {
-        event.renderer(ChatRenderer.viewerUnaware((source, displayName, message) ->
-                MM.deserialize(chatFormat,
-                        iqTag(iqOf(source.getUniqueId())),
-                        Placeholder.component("player", displayName),
-                        Placeholder.component("message", message))));
+        Player source = event.getPlayer();
+        Component formatted = MM.deserialize(chatFormat,
+                iqTag(iqOf(source.getUniqueId())),
+                Placeholder.component("player", source.displayName()),
+                Placeholder.component("message", event.message()));
+        event.setCancelled(true);
+        Bukkit.broadcast(formatted);
     }
 
     // ------------------------------------------------------------------ nametags
